@@ -5,17 +5,19 @@ namespace CustomCollections
     public class Collection<T>
     {
         private T[] _array;
-        private int _lastElemIndex;
+        private int _nextIndex;
         private int _lenght;
 
         public Collection()
         {
-            _lastElemIndex = 0;
+            _nextIndex = 0;
             _lenght = 4;
             _array = new T[_lenght];
         }
 
-        private T this [int element]
+        public int Count { get { return _nextIndex == 0 ? 0 : _nextIndex - 1; } }
+
+        public T this [int element]
         {
             get { return _array[element]; }
             set { _array[element] = value;  }
@@ -25,19 +27,19 @@ namespace CustomCollections
         {
             if (!IsNumericType(item))
                 throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
-            if (_lastElemIndex.Equals(_lenght - 1))
+            if (_nextIndex.Equals(_lenght))
                 Resize();
 
-            _array[_lastElemIndex++] = item;
+            _array[_nextIndex++] = item;
         }
 
         public void Add(T item, int index)
         {
             if (!IsNumericType(item))
                 throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
-            if (_lastElemIndex.Equals(_lenght - 1))
+            if (_nextIndex.Equals(_lenght))
                 Resize();
-            if (index < 0 || index > _lenght)
+            if (index < 0 || index > _nextIndex - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             MoveArrRight(index);
@@ -47,7 +49,7 @@ namespace CustomCollections
 
         private void MoveArrRight(int index)
         {
-            for (int i = ++_lastElemIndex; i > index; i--)
+            for (int i = ++_nextIndex; i > index; i--)
             {
                 _array[i] = _array[i - 1];
             }
@@ -56,6 +58,42 @@ namespace CustomCollections
         private void Resize()
         {
             Array.Resize(ref _array, _lenght *= 2);
+        }
+
+        public bool Remove(T item)
+        {
+            if (!IsNumericType(item))
+                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
+
+            for (int i = 0; i < _nextIndex; i++)
+            {
+                if (_array[i].Equals(item))
+                {
+                    _array[i] = default(T);
+                    MoveArrLeft(i);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void Remove(int index)
+        {
+            if (index < 0 || index > _nextIndex - 1)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            MoveArrLeft(index);
+        }
+
+        private void MoveArrLeft(int index)
+        {
+            for (int i = index; i < _nextIndex; i++)
+            {
+                _array[i] = _array[i + 1];
+            }
+
+            _array[_nextIndex--] = default(T);
         }
 
         private bool IsNumericType(T item)

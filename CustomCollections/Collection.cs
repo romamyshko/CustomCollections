@@ -21,6 +21,37 @@ namespace CustomCollections
             set { _array[element] = value;  }
         }
 
+        public void Add(T item)
+        {
+            if (!IsNumericType(item))
+                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
+            if (_lastElemIndex.Equals(_lenght - 1))
+                Resize();
+
+            _array[_lastElemIndex++] = item;
+        }
+
+        public void Add(T item, int index)
+        {
+            if (!IsNumericType(item))
+                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
+            if (_lastElemIndex.Equals(_lenght - 1))
+                Resize();
+            if (index < 0 || index > _lenght)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            MoveArrRight(index);
+
+            _array[index] = item;
+        }
+
+        private void MoveArrRight(int index)
+        {
+            for (int i = ++_lastElemIndex; i > index; i--)
+            {
+                _array[i] = _array[i - 1];
+            }
+        }
 
         private void Resize()
         {

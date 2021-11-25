@@ -2,7 +2,7 @@
 
 namespace CustomCollections
 {
-    public class Collection<T>
+    public class Collection<T> where T : struct, IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
     {
         private T[] _array;
         private int _nextIndex;
@@ -13,6 +13,9 @@ namespace CustomCollections
             _nextIndex = 0;
             _lenght = 4;
             _array = new T[_lenght];
+
+            if (!IsNumericType(_array[0]))
+                throw new ArgumentException($"Type '{_array[0].GetType()}' is not a numerical type");
         }
 
         public int Count { get { return _nextIndex == 0 ? 0 : _nextIndex - 1; } }
@@ -25,8 +28,6 @@ namespace CustomCollections
 
         public void Add(T item)
         {
-            if (!IsNumericType(item))
-                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
             if (_nextIndex.Equals(_lenght))
                 Resize();
 
@@ -35,8 +36,6 @@ namespace CustomCollections
 
         public void Add(T item, int index)
         {
-            if (!IsNumericType(item))
-                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
             if (_nextIndex.Equals(_lenght))
                 Resize();
             if (index < 0 || index > _nextIndex - 1)
@@ -62,9 +61,6 @@ namespace CustomCollections
 
         public bool Remove(T item)
         {
-            if (!IsNumericType(item))
-                throw new ArgumentException($"Type '{item.GetType()}' is not a numerical type");
-
             for (int i = 0; i < _nextIndex; i++)
             {
                 if (_array[i].Equals(item))

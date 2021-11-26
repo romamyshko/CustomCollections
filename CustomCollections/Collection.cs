@@ -8,11 +8,6 @@ namespace CustomCollections
         private int _nextIndex;
         private int _lenght;
 
-        public const string IndexerIndexExceedsNumberOfElementsMessage = "Indexer's index exceeds number of elements";
-        public const string IndexerIndexLessThanZeroMessage = "Indexer's index is less than zero";
-        public const string IndexExceedsNumberOfElementsMessage = "Index exceeds number of elements";
-        public const string IndexLessThanZeroMessage = "Index is less than zero";
-
         public Collection()
         {
             _nextIndex = 0;
@@ -20,7 +15,7 @@ namespace CustomCollections
             _array = new T[_lenght];
 
             if (!IsNumericType(_array[0]))
-                throw new ArgumentException($"Type '{_array[0].GetType()}' is not a numerical type");
+                throw new TypeAccessException($"Type '{_array[0].GetType()}' is not a numerical type");
         }
 
         public int Count { get { return _nextIndex; } }
@@ -126,17 +121,17 @@ namespace CustomCollections
         private void CheckIndexerIndex(int index)
         {
             if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index), index, IndexerIndexLessThanZeroMessage);
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Indexer's index is less than zero");
             else if (index > _nextIndex - 1)
-                throw new ArgumentOutOfRangeException(nameof(index), index, IndexerIndexExceedsNumberOfElementsMessage);
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Indexer's index exceeds number of elements");
         }
 
         private void CheckIndex(int index)
         {
             if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index), index, IndexLessThanZeroMessage);
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index is less than zero");
             else if (index > _nextIndex - 1)
-                throw new ArgumentOutOfRangeException(nameof(index), index, IndexExceedsNumberOfElementsMessage);
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index exceeds number of elements");
         }
     }
 }

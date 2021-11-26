@@ -11,18 +11,8 @@ namespace CollectionTests
         public void Indexer_WhenIndexIsLessThanZero_ShouldThrowOutOfRange()
         {
             Collection<int> collection = new Collection<int>();
-            
-            try
-            {
-                collection[-1] = 1;
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexerIndexLessThanZeroMessage);
-                return;
-            }
 
-            Assert.Fail("The expected exception was not thrown.");
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection[-1] = 1);
         } 
 
         [TestMethod]
@@ -31,17 +21,7 @@ namespace CollectionTests
             Collection<int> collection = new Collection<int>();
             collection.Add(1);
 
-            try
-            {
-                collection[2] = 2;
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexerIndexExceedsNumberOfElementsMessage);
-                return;
-            }
-
-            Assert.Fail("The expected exception was not thrown.");
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection[2] = 2);
         }
 
         [TestMethod]
@@ -49,17 +29,7 @@ namespace CollectionTests
         {
             Collection<int> collection = new Collection<int>();
 
-            try
-            {
-                collection.Add(0, -1);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexLessThanZeroMessage);
-                return;
-            }
-
-            Assert.Fail("The expected exception was not thrown.");
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection.Add(0, -1));
         }
 
         [TestMethod]
@@ -70,35 +40,16 @@ namespace CollectionTests
             collection.Add(2); // index = 1
             collection.Add(3); // index = 2
 
-            try
-            {
-                collection.Add(4, 3); // move elements with index >= 3 and try to add new element by index = 3
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexExceedsNumberOfElementsMessage);
-                return;
-            }
-
-            Assert.Fail("The expected exception was not thrown.");
+            // move elements with index >= 3 and try to add new element by index = 3
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection.Add(4, 3));
         }
 
         [TestMethod]
         public void RemoveByIndex_WhenIndexIsLessThanZero_ShouldThrowOutOfRange()
         {
             Collection<int> collection = new Collection<int>();
-            
-            try
-            {
-                collection.Remove(-1);
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexLessThanZeroMessage);
-                return;
-            }
 
-            Assert.Fail("The expected exception was not thrown.");
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection.Remove(-1));
         }
 
         [TestMethod]
@@ -109,17 +60,13 @@ namespace CollectionTests
             collection.Add(2); // index = 1
             collection.Add(3); // index = 2
 
-            try
-            {
-                collection.Remove(3); // remove by index = 3
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                StringAssert.Contains(e.Message, Collection<int>.IndexExceedsNumberOfElementsMessage);
-                return;
-            }
+            Assert.ThrowsException<System.ArgumentOutOfRangeException>(() => collection.Remove(3)); // remove by index = 3
+        }
 
-            Assert.Fail("The expected exception was not thrown.");
+        [TestMethod]
+        public void Constructor_WhenInitArrOfTypeStruct_ShouldThrowTypeAccess()
+        {
+            Assert.ThrowsException<System.TypeAccessException>(() => new Collection<DateTime>());
         }
     }
 }

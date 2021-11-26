@@ -18,12 +18,22 @@ namespace CustomCollections
                 throw new ArgumentException($"Type '{_array[0].GetType()}' is not a numerical type");
         }
 
-        public int Count { get { return _nextIndex == 0 ? 0 : _nextIndex - 1; } }
+        public int Count { get { return _nextIndex; } }
 
-        public T this [int element]
+        public T this [int index]
         {
-            get { return _array[element]; }
-            set { _array[element] = value;  }
+            get
+            {
+                if (index < 0 || index > _nextIndex - 1)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return _array[index]; 
+            }
+            set 
+            {
+                if (index < 0 || index > _nextIndex - 1)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                _array[index] = value; 
+            }
         }
 
         public void Add(T item)

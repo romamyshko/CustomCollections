@@ -8,6 +8,11 @@ namespace CustomCollections
         private int _nextIndex;
         private int _lenght;
 
+        public const string IndexerIndexExceedsNumberOfElementsMessage = "Indexer's index exceeds number of elements";
+        public const string IndexerIndexLessThanZeroMessage = "Indexer's index is less than zero";
+        public const string IndexExceedsNumberOfElementsMessage = "Index exceeds number of elements";
+        public const string IndexLessThanZeroMessage = "Index is less than zero";
+
         public Collection()
         {
             _nextIndex = 0;
@@ -24,14 +29,12 @@ namespace CustomCollections
         {
             get
             {
-                if (index < 0 || index > _nextIndex - 1)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                CheckIndexerIndex(index);
                 return _array[index]; 
             }
             set 
             {
-                if (index < 0 || index > _nextIndex - 1)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                CheckIndexerIndex(index);
                 _array[index] = value; 
             }
         }
@@ -48,11 +51,10 @@ namespace CustomCollections
         {
             if (_nextIndex.Equals(_lenght))
                 Resize();
-            if (index < 0 || index > _nextIndex - 1)
-                throw new ArgumentOutOfRangeException(nameof(index));
+
+            CheckIndex(index);
 
             MoveArrRight(index);
-
             _array[index] = item;
         }
 
@@ -86,9 +88,7 @@ namespace CustomCollections
 
         public void Remove(int index)
         {
-            if (index < 0 || index > _nextIndex - 1)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
+            CheckIndex(index);
             MoveArrLeft(index);
         }
 
@@ -121,6 +121,22 @@ namespace CustomCollections
                 default:
                     return false;
             }
+        }
+
+        private void CheckIndexerIndex(int index)
+        {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index), index, IndexerIndexLessThanZeroMessage);
+            else if (index > _nextIndex - 1)
+                throw new ArgumentOutOfRangeException(nameof(index), index, IndexerIndexExceedsNumberOfElementsMessage);
+        }
+
+        private void CheckIndex(int index)
+        {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index), index, IndexLessThanZeroMessage);
+            else if (index > _nextIndex - 1)
+                throw new ArgumentOutOfRangeException(nameof(index), index, IndexExceedsNumberOfElementsMessage);
         }
     }
 }

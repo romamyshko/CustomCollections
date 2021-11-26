@@ -18,7 +18,8 @@ namespace CustomCollections
                 throw new TypeAccessException($"Type '{_array[0].GetType()}' is not a numerical type");
         }
 
-        public int Count { get { return _nextIndex; } }
+        public int Count => _nextIndex;
+        public T GetLast => _array[_nextIndex - 1];
 
         public T this [int index]
         {
@@ -47,7 +48,7 @@ namespace CustomCollections
             if (_nextIndex.Equals(_lenght))
                 Resize();
 
-            CheckIndex(index);
+            CheckEnteredIndex(index);
 
             MoveArrRight(index);
             _array[index] = item;
@@ -66,13 +67,12 @@ namespace CustomCollections
             Array.Resize(ref _array, _lenght *= 2);
         }
 
-        public bool Remove(T item)
+        public bool RemoveFirst(T item)
         {
             for (int i = 0; i < _nextIndex; i++)
             {
                 if (_array[i].Equals(item))
                 {
-                    _array[i] = default(T);
                     MoveArrLeft(i);
                     return true;
                 }
@@ -83,18 +83,18 @@ namespace CustomCollections
 
         public void Remove(int index)
         {
-            CheckIndex(index);
+            CheckEnteredIndex(index);
             MoveArrLeft(index);
         }
 
         private void MoveArrLeft(int index)
         {
-            for (int i = index; i < _nextIndex; i++)
+            for (int i = index; i < _nextIndex - 1; i++)
             {
                 _array[i] = _array[i + 1];
             }
 
-            _array[_nextIndex--] = default(T);
+            _array[--_nextIndex] = default(T);
         }
 
         private bool IsNumericType(T item)
@@ -126,12 +126,17 @@ namespace CustomCollections
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Indexer's index exceeds number of elements");
         }
 
-        private void CheckIndex(int index)
+        private void CheckEnteredIndex(int index)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Index is less than zero");
             else if (index > _nextIndex - 1)
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Index exceeds number of elements");
+        }
+     
+        public Enumerator<T> GetEnumerator()
+        {
+            return new Enumerator<T>(this);
         }
     }
 }

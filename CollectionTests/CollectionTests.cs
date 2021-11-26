@@ -68,5 +68,52 @@ namespace CollectionTests
         {
             Assert.ThrowsException<System.TypeAccessException>(() => new Collection<DateTime>());
         }
+
+        [TestMethod]
+        public void AddToEnd_WhenCallGetLast_ShouldEqualsToLastNumWasAdded()
+        {
+            Random random = new Random();
+            Collection<double> c = new Collection<double>();
+
+            c.Add(random.NextDouble());
+            c.Add(random.NextDouble());
+            c.Add(random.NextDouble());
+
+            double num = random.NextDouble();
+            c.Add(num);
+
+            Assert.AreEqual<double>(num, c.GetLast);
+        }
+
+        [TestMethod]
+        public void RemoveByValue_WhenFindFirstSuchValue_MoveElementsLeft()
+        { 
+            Collection<int> collection = new Collection<int>();
+
+            collection.Add(1);
+            collection.Add(2);
+            collection.Add(3); // 3
+            collection.Add(4);
+            collection.Add(5);
+            collection.Add(3); // 3
+            collection.Add(6);
+            collection.Add(7);
+            collection.Add(8);
+            collection.Add(3); // 3
+            collection.Add(9);
+
+            collection.RemoveFirst(3);
+            collection.RemoveFirst(3);
+
+            int count = 0;
+
+            foreach (int element in collection)
+            {
+                if (element == 3)
+                    count++;
+            }
+
+            Assert.AreEqual<int>(1, count);
+        }
     }
 }

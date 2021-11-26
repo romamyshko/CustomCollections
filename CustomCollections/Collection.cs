@@ -7,6 +7,7 @@ namespace CustomCollections
         private T[] _array;
         private int _nextIndex;
         private int _lenght;
+        private T _maxItem = default(T);
 
         public Collection()
         {
@@ -19,7 +20,7 @@ namespace CustomCollections
         }
 
         public int Count => _nextIndex;
-        public T GetLast => _array[_nextIndex - 1];
+        public T GetMax => _nextIndex == 0 ? throw new Exception("Collection is empty") : _maxItem;
 
         public T this [int index]
         {
@@ -41,6 +42,8 @@ namespace CustomCollections
                 Resize();
 
             _array[_nextIndex++] = item;
+            if (CheckOnMaxValue(item))
+                _maxItem = item;
         }
 
         public void Add(T item, int index)
@@ -52,6 +55,33 @@ namespace CustomCollections
 
             MoveArrRight(index);
             _array[index] = item;
+            if (CheckOnMaxValue(item))
+                _maxItem = item;
+        }
+
+        private bool CheckOnMaxValue(T item)
+        {
+            if (_nextIndex != 0)
+            {
+                int res = item.CompareTo(_maxItem);
+
+                if (res > 0)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private T FindMaxItem()
+        {
+            T maxItem = _array[0];
+            for (int i = 0; i < _nextIndex; i++)
+            {
+                if (_array[i].CompareTo(maxItem) > 0)
+                    maxItem = _array[i];
+            }
+
+            return maxItem;
         }
 
         private void MoveArrRight(int index)
@@ -76,6 +106,12 @@ namespace CustomCollections
                 if (_array[i].Equals(item))
                 {
                     MoveArrLeft(i);
+
+                    if (_nextIndex != 0 && item.Equals(_maxItem))
+                    {
+                        _maxItem = FindMaxItem();
+                    }
+
                     return true;
                 }
             }
@@ -86,7 +122,12 @@ namespace CustomCollections
         public void Remove(int index)
         {
             CheckEnteredIndex(index);
+
+            bool deletingMaxItem = _array[index].Equals(_maxItem);
             MoveArrLeft(index);
+
+            if (deletingMaxItem)
+                _maxItem = FindMaxItem();
         }
 
         private void MoveArrLeft(int index)

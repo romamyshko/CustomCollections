@@ -103,23 +103,7 @@ namespace CollectionTests
         }
 
         [TestMethod]
-        public void AddToEnd_WhenCallGetLast_ShouldEqualsToLastNumWasAdded()
-        {
-            Random random = new Random();
-            Collection<double> collection = new Collection<double>();
-
-            collection.Add(random.NextDouble());
-            collection.Add(random.NextDouble());
-            collection.Add(random.NextDouble());
-
-            double num = random.NextDouble();
-            collection.Add(num);
-
-            Assert.AreEqual(num, collection.GetLast);
-        }
-
-        [TestMethod]
-        public void AddToEnd_WhenArrayIsFull_ShouldResizeArrayAndAddToEndNewElement()
+        public void AddToEnd_WhenArrayIsFull_ShouldResizeArray()
         {
             Random random = new Random();
             Collection<double> collection = new Collection<double>();
@@ -135,7 +119,6 @@ namespace CollectionTests
             collection.Add(num);
 
             Assert.AreEqual(5, collection.Count);
-            Assert.AreEqual(num, collection.GetLast);
         }
 
         [TestMethod]
@@ -231,6 +214,73 @@ namespace CollectionTests
 
             Assert.AreEqual(5, collection[3]);
             Assert.AreEqual(4, collection.Count);
+        }
+
+        [TestMethod]
+        public void GetMax_WhenCollectionIsNotEmpty_ShouldReturnTheBiggestValue()
+        {
+            Collection<double> collection = new Collection<double>();
+
+            collection.Add(0.13123d);
+            collection.Add(2.23422d);
+            collection.Add(-23.2342d);
+            collection.Add(24.2321d);
+
+            Assert.AreEqual(24.2321d, collection.GetMax);
+        }
+        
+        [TestMethod]
+        public void GetMax_WhenCollectionIsEmpty_ShouldThrowException()
+        {
+            Collection<double> collection = new Collection<double>();
+
+            Assert.ThrowsException<System.Exception>(() => collection.GetMax);
+        }
+
+        [TestMethod]
+        public void GetMax_WhenRemoveByIndexMaxItem_ShouldReturnPrevMaxItem()
+        {
+            Collection<double> collection = new Collection<double>();
+
+            collection.Add(0.13123d);
+            collection.Add(2.23422d);
+            collection.Add(-23.2342d);
+            collection.Add(24.2321d);
+
+            collection.Remove(3);
+
+            Assert.AreEqual(2.23422d, collection.GetMax);
+        }
+
+        [TestMethod]
+        public void GetMax_WhenRemoveByItemMaxItem_ShouldReturnPrevMaxItem()
+        {
+            Collection<double> collection = new Collection<double>();
+
+            collection.Add(0.13123d);
+            collection.Add(2.23422d);
+            collection.Add(-23.2342d);
+            collection.Add(24.2321d);
+
+            collection.RemoveFirst(24.2321d);
+
+            Assert.AreEqual(2.23422d, collection.GetMax);
+        }
+
+        [TestMethod]
+        public void GetMax_WhenRemoveNotMaxItems_ShouldReturnNotChangedMaxValue()
+        {
+            Collection<double> collection = new Collection<double>();
+
+            collection.Add(0.13123d);
+            collection.Add(2.23422d);
+            collection.Add(-23.2342d);
+            collection.Add(24.2321d);
+
+            collection.RemoveFirst(0.13123d);
+            collection.Remove(0);
+
+            Assert.AreEqual(24.2321d, collection.GetMax);
         }
     }
 }

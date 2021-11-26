@@ -56,10 +56,12 @@ namespace CustomCollections
 
         private void MoveArrRight(int index)
         {
-            for (int i = ++_nextIndex; i > index; i--)
+            for (int i = _nextIndex; i > index; i--)
             {
                 _array[i] = _array[i - 1];
             }
+
+            _nextIndex++;
         }
 
         private void Resize()
